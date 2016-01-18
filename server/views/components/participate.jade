@@ -1,0 +1,32 @@
+extends ../layout
+
+block content            
+    .participate-content
+        .card.card-inverse.card-danger(*ngIf="error")
+            .card-block.error.stats-error
+                {{error}}
+                br
+                button.btn.btn-primary.btn-stats-back([routerLink]="['PollsList']") Back
+                
+        #noError(*ngIf="!error && poll")
+            h1.form-title {{ poll.title }}
+
+            <form (ngSubmit)="send()" #participateForm="ngForm">
+            .question(*ngFor="#question of poll.questions")
+                h2 {{ question.title }}
+
+                div(*ngIf="question.type == 'multiple'") 
+                    .multiple(*ngFor="#choice of question.choices")
+                        label
+                            <input class="choice" type="checkbox" name="{{ choice.key }}" value="{{ choice._id }}">
+                            {{ choice.text }}
+                        br
+
+                div(*ngIf="question.type != 'multiple'") 
+                    .single(*ngFor="#choice of question.choices")
+                        label
+                            <input class="choice" type="radio" name="{{ question.title }}" value="{{ choice._id }}">
+                            {{ choice.text }}
+                        br
+            button.btn.btn-primary.pull-right(type="submit") Submit
+            </form>

@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+    .pollslist-page
+        h1.form-title.page-title Select a poll
+        
+        if error
+            | Error : #{error}
+        else
+            for p in polls
+                a.btn.btn-primary.poll([routerLink]="['Stats', {id:'" + p._id + "'}]")
+                    | #{p.title}
+                br

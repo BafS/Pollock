@@ -1,0 +1,50 @@
+extends ../layout
+
+block content
+    .stats-content
+        .card.card-inverse.card-danger(*ngIf="error")
+            .card-block.error.stats-error
+                {{error}}
+                br
+                button.btn.btn-primary.btn-stats-back([routerLink]="['PollsList']") Back
+
+        #noError(*ngIf="!error")
+            h1.form-title(*ngIf="poll") Stats for "{{poll.title}}"
+
+            table.table.stats-table(*ngIf="poll")
+                tr
+                    td.stat State
+                    td {{poll.state}}
+                tr
+                    td.stat Creation date
+                    td {{poll.creationDate}}
+                tr
+                    td.stat Number of questions
+                    td {{poll.questions.length}}
+
+            #participations(*ngIf="participations && participations.length > 0")
+                | {{participations.length}} {{participations.length > 1 ? "people" : "person"}} answered this poll:
+
+                .questions(*ngFor="#q of poll.questions")
+                    h2.form-title(style="padding-top: 10px") {{ q.title }}
+
+                    table.table.table-bordered.participations-table
+                        tr
+                            td(*ngFor="#qc of q.choices")
+                                b {{ qc.text }}
+                        tr(*ngFor='#p of participations')
+                            td(*ngFor="#qc of q.choices")
+                                div(*ngFor="#a of p.answers")
+                                    div(*ngIf="a.choice == qc._id", style="text-align: center;") X
+                            td {{p.participant}}
+                            td {{p.submissionDate}}
+
+            #noParticipations(*ngIf="!participations || participations.length <= 0")
+                | There is still no participation for this poll.
+
+            button.btn.btn-stats-back([routerLink]="['PollsList']") Back
+
+            .input-group.pull-xs-right
+                button.btn.btn-primary.btn-stats-back(*ngIf="poll", [routerLink]="['Participate', {id: poll._id}]") Participate
+
+                button.btn.btn-info.btn-stats-back(*ngIf="poll", [routerLink]="['PollEditor', {id: poll._id}]") PollEditor
